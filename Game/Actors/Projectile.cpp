@@ -1,6 +1,6 @@
-#include "Enemy.h"
+#include "Projectile.h"
 
-bool Enemy::Load(const std::string& filename)
+bool Projectile::Load(const std::string& filename)
 {
     bool success = false;
 
@@ -22,24 +22,23 @@ bool Enemy::Load(const std::string& filename)
 }
 
 
-void Enemy::Update(float dt)
+void Projectile::Update(float dt)
 {
-	nc::Vector2 direction = m_target->GetTransform().position - m_transform.position;
-	m_velocity = direction.Normalized() * m_thrust;
+	nc::Vector2 direction = nc::Vector2::Rotate( nc::Vector2::forward, m_transform.angle );
+	m_velocity = direction * m_thrust;
 	m_transform.position += m_velocity * dt;
-	m_transform.angle = std::atan2(direction.y, direction.x)+ nc::DegreesToRadians(90.0f);
 
     m_transform.Update();
 }
 
-void Enemy::Draw(Core::Graphics& graphics)
+void Projectile::Draw(Core::Graphics& graphics)
 {
 	Actor::Draw(graphics);
 }
 
-void Enemy::OnCollision(Actor* actor)
+void Projectile::OnCollision(Actor* actor)
 {
-    if (actor->GetType() == eType::PROJECTILE) 
+    if (actor->GetType() == eType::ENEMY)
     {
         m_destroy = true;
     }

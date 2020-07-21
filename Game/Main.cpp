@@ -14,12 +14,10 @@
 #include "Graphics/Shape.h"
 #include "Actors/Player.h"
 #include "Actors/Enemy.h"
+#include "Object/Scene.h"
 
 
-//Player player;
-//Enemy enemy;
-
-std::list<nc::Actor*> actors;
+nc::Scene scene;
 
 nc::Vector2 velocity;
 float thrust = 200.0;
@@ -139,53 +137,12 @@ DWORD deltaTime;
 }
 */
 
-template <typename T>
-nc::Actor* GetActor()
-{
-	nc::Actor* result = nullptr;
-
-	for (nc::Actor* actor : actors)
-	{
-		result = dynamic_cast<T*>(actor);
-		if (result) break;
-	}
-
-	return result;
-}
-
-template <typename T>
-std::vector<nc::Actor*> GetActors()
-{
-	std::vector<nc::Actor*> results;
-
-	for (nc::Actor* actor : actors)
-	{
-		T*result = dynamic_cast<T*>(actor);
-		if (result)
-		{
-			results.push_back(result);
-		}
-	}
-
-	return results;
-}
 
 bool Update(float dt)
 {
 	bool quit = Core::Input::IsPressed(Core::Input::KEY_ESCAPE);
 	frametime = dt;
-
-	if (Core::Input::IsPressed(VK_SPACE))
-	{
-		auto removeActors = GetActors<Enemy>();
-		for (auto actor : removeActors)
-		{
-			auto iter = std::find(actors.begin(), actors.end(), actor);
-			delete* iter;
-			actors.erase(iter);
-		}
-	}
-
+	
 	spawntimer += dt;
 	if (spawntimer >= 3.0f)
 	{
@@ -194,17 +151,15 @@ bool Update(float dt)
 		//Add enemy to scene
 		nc::Actor* enemy = new Enemy;
 		enemy->Load("Enemy.txt");
-		dynamic_cast<Enemy*>(enemy)->SetTarget(GetActor<Player>());
+		dynamic_cast<Enemy*>(enemy)->SetTarget(scene.GetActor<Player>());
 		enemy->GetTransform().position = nc::Vector2{ nc::random(0, 800), nc::random(0, 600) };
 		dynamic_cast<Enemy*>(enemy)->SetThrust(nc::random(50, 100));
 
-		actors.push_back(enemy);
+		scene.AddActor(enemy);
 	}
+	
+	scene.Update(dt);
 
-	for (nc::Actor* actor : actors)
-	{
-		actor->Update(dt);
-	}
 
 	return quit;
 }
@@ -214,19 +169,16 @@ void Draw(Core::Graphics& graphics)
 	graphics.DrawString(10, 10, std::to_string(frametime).c_str());
 	graphics.DrawString(10, 20, std::to_string(1.0f / frametime).c_str());
 
-
-	for (nc::Actor* actor : actors)
-	{
-		actor->Draw(graphics);
-	}
-
+	scene.Draw(graphics);
 }
 
 int main()
 {
+	scene.Startup();
+
 	nc::Actor* player = new Player;
 	player->Load("Player.txt");
-	actors.push_back(player);
+	scene.AddActor(player);
 
 	for (int i = 0; i < 3; i++)
 	{
@@ -236,7 +188,7 @@ int main()
 		enemy->GetTransform().position = nc::Vector2{ nc::random(0, 800), nc::random(0, 600) };
 		dynamic_cast<Enemy*>(enemy)->SetThrust(nc::random(50, 100));
 
-		actors.push_back(enemy);
+		scene.AddActor(enemy);
 	}
 
 	char name[] = "CSC196";
@@ -246,4 +198,6 @@ int main()
 
 	Core::GameLoop();
 	Core::Shutdown();
+
+	scene.Shutdown();
 }

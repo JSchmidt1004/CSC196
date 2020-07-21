@@ -3,13 +3,13 @@
 #include "Object/Actor.h"
 
 
-class Enemy : public nc::Actor
+class Projectile : public nc::Actor
 {
 	public:
-		Enemy() {}
-		virtual ~Enemy() {}
+		Projectile() {}
+		virtual ~Projectile() {}
 
-		virtual eType GetType() { return eType::ENEMY; }
+		virtual eType GetType() { return eType::PROJECTILE; }
 
 		virtual bool Load(const std::string& filename) override;
 

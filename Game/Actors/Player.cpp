@@ -1,4 +1,6 @@
 #include "Player.h"
+#include "Projectile.h"
+#include "Object/Scene.h"
 
 bool Player::Load(const std::string& filename)
 {
@@ -25,6 +27,19 @@ bool Player::Load(const std::string& filename)
 
 void Player::Update(float dt)
 {
+	m_fireTimer += dt;
+
+	if (Core::Input::IsPressed(VK_SPACE) && m_fireTimer >= m_fireRate)
+	{
+		m_fireTimer = 0.0f;
+		nc::Actor* projectile = new Projectile;
+		projectile->Load("Projectile.txt");
+		projectile->GetTransform().position = m_transform.position;
+		projectile->GetTransform().angle = m_transform.angle;
+
+		m_scene->AddActor(projectile);
+	}
+
 	//position
 	nc::Vector2 force;
 	if (Core::Input::IsPressed('W')) { force = nc::Vector2::forward * m_thrust; }
