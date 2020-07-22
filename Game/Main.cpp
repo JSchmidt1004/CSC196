@@ -19,7 +19,6 @@
 
 
 nc::Scene scene;
-nc::ParticleSystem particleSystem;
 
 nc::Vector2 velocity;
 float thrust = 200.0;
@@ -159,13 +158,19 @@ bool Update(float dt)
 
 		scene.AddActor(enemy);
 	}
-
-	Player* player = scene.GetActor<Player>();
-	if(Core::Input::IsPressed('W'))
-	particleSystem.Create(player->GetTransform().position, player->GetTransform().angle + nc::PI, 20, 1, nc::Color{ 1, 1, 1 }, 1, 50, 100);
 	
+	if (Core::Input::IsPressed(Core::Input::BUTTON_LEFT))
+	{
+		int x, y;
+		Core::Input::GetMousePos(x, y);
+
+		nc::Color colors[] = { nc::Color::white, nc::Color::red, nc::Color::yellow };
+		nc::Color color = colors[rand() % 3];
+
+		g_particleSystem.Create({x, y}, 0, 180, 30, color, 1, 50, 100);
+	}
 	scene.Update(dt);
-	particleSystem.Update(dt);
+	g_particleSystem.Update(dt);
 
 
 	return quit;
@@ -177,13 +182,13 @@ void Draw(Core::Graphics& graphics)
 	graphics.DrawString(10, 20, std::to_string(1.0f / frametime).c_str());
 
 	scene.Draw(graphics);
-	particleSystem.Draw(graphics);
+	g_particleSystem.Draw(graphics);
 }
 
 int main()
 {
 	scene.Startup();
-	particleSystem.Startup();
+	g_particleSystem.Startup();
 
 	nc::Actor* player = new Player;
 	player->Load("Player.txt");
@@ -209,5 +214,5 @@ int main()
 	Core::Shutdown();
 
 	scene.Shutdown();
-	particleSystem.Shutdown();
+	g_particleSystem.Shutdown();
 }

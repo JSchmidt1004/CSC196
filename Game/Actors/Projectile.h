@@ -25,5 +25,7 @@ class Projectile : public nc::Actor
 		nc::Vector2 m_velocity;
 		Actor* m_target = nullptr;
 		float m_thrust = 0.0f;
+		float m_lifetime = 3;
+
 		
 };

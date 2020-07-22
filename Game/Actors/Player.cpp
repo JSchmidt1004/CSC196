@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Projectile.h"
 #include "Object/Scene.h"
+#include "Graphics/ParticleSystem.h"
 
 bool Player::Load(const std::string& filename)
 {
@@ -58,6 +59,10 @@ void Player::Update(float dt)
 	if (m_transform.position.x < 0) m_transform.position.x = 800;
 	if (m_transform.position.y > 600) m_transform.position.y = 0;
 	if (m_transform.position.y < 0) m_transform.position.y = 600;
+
+	//if (Core::Input::IsPressed('W'))
+	if (force.LengthSqr() > 0)
+	g_particleSystem.Create(m_transform.position, m_transform.angle + nc::PI, 20, 1, nc::Color::white, 1, 50, 100);
 
 	m_transform.Update();
 

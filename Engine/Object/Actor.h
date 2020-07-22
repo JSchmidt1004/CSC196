@@ -30,6 +30,7 @@ namespace nc
 
 		virtual void OnCollision(Actor* actor) {}
 
+		float GetRadius();
 		virtual eType GetType() = 0;
 
 		Transform& GetTransform() { return m_transform; } 

@@ -3,10 +3,12 @@
 #include "Math/Math.h"
 #include "Math/Random.h"
 
+nc::ParticleSystem g_particleSystem;
+
 void nc::ParticleSystem::Startup()
 {
-	m_particles = new Particle[300];
-	m_size = 300;
+	m_size = 3000;
+	m_particles = new Particle[m_size];
 }
 
 void nc::ParticleSystem::Shutdown()
@@ -54,6 +56,7 @@ void nc::ParticleSystem::Create(const Vector2& position, float angle, float angl
 			p->active = true;
 			p->lifetime = lifetime;
 			p->position = position;
+			p->prevPosition = position;
 			p->color = color;
 
 			float angleRandom = nc::DegreesToRadians(nc::random(-angleRange, angleRange));

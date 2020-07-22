@@ -42,6 +42,11 @@ namespace nc
 
 		operator COLORREF() const { return pack888(); }
 
+		static const Color white;
+		static const Color red;
+		static const Color green;
+		static const Color blue;
+		static const Color yellow;
 	};
 
 	inline COLORREF Color::pack888() const
@@ -49,6 +54,9 @@ namespace nc
 		BYTE _r = static_cast<BYTE>(r * 255.0f);
 		BYTE _g = static_cast<BYTE>(g * 255.0f);
 		BYTE _b = static_cast<BYTE>(b * 255.0f);
+		//return RGB(_r, _g, _b);
 		return (_r) | (_g << 8) | (_b << 16);
 	}
+
+
 }
