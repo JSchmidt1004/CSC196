@@ -15,6 +15,8 @@ class Player : public nc::Actor
 		virtual void Update(float dt) override;
 		virtual void Draw(Core::Graphics& graphics) override;
 
+		virtual void OnCollision(Actor* actor) override;
+
 	protected:
 		nc::Vector2 m_velocity;
 		float m_thrust;

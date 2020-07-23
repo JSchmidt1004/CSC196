@@ -1,5 +1,7 @@
 #include "Enemy.h"
 #include "Graphics/ParticleSystem.h"
+#include "Object/Scene.h"
+#include "../Game.h"
 
 bool Enemy::Load(const std::string& filename)
 {
@@ -43,6 +45,11 @@ void Enemy::OnCollision(Actor* actor)
     if (actor->GetType() == eType::PROJECTILE) 
     {
         m_destroy = true;
+
+        //Set game score
+        m_scene->GetGame()->AddPoints(100);
+
+
         nc::Color colors[] = { nc::Color::white, nc::Color::red, nc::Color::yellow };
         nc::Color color = colors[rand() % 3];
 

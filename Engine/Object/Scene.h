@@ -3,6 +3,8 @@
 #include <list>
 #include "core.h"
 
+class Game;
+
 namespace nc
 {
 	class Scene
@@ -49,7 +51,11 @@ namespace nc
 			return dynamic_cast<T*>(results);
 		}
 
+		void SetGame(Game* game) { m_game = game; }
+		Game* GetGame() { return m_game; }
+
 	private:
+		Game* m_game;
 		std::list<class Actor*> m_actors;
 	};
 }

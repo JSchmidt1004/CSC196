@@ -2,6 +2,7 @@
 #include "Projectile.h"
 #include "Object/Scene.h"
 #include "Graphics/ParticleSystem.h"
+#include "../Game.h"
 
 bool Player::Load(const std::string& filename)
 {
@@ -72,4 +73,12 @@ void Player::Update(float dt)
 void Player::Draw(Core::Graphics& graphics)
 {
 	Actor::Draw(graphics);
+}
+
+void Player::OnCollision(Actor* actor)
+{
+	if (actor->GetType() == eType::ENEMY)
+	{
+		m_scene->GetGame()->SetState(Game::eState::GAME_OVER);
+	}
 }
